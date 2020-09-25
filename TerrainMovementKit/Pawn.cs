@@ -386,4 +386,20 @@ namespace TerrainMovement
             return Mathf.Clamp(value, 1, 450);
         }
     }
+
+
+    [HarmonyPatch(typeof(RimWorld.RestUtility), "IsValidBedFor")]
+    public static class AquaticBedPatch
+    {
+        static bool Prefix(Thing bedThing, Pawn sleeper, ref bool __result)
+        {
+            if(sleeper.kindDef.UnreachableTerrainCheck(sleeper.Map.terrainGrid.TerrainAt(bedThing.Position)))
+            {
+                __result = false;
+                return false;
+            }
+            return true;
+        }
+    }
+
 }
